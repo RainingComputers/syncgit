@@ -61,7 +61,7 @@ while True:
     and `"module"` (will be imported the file as python module)
 
 
-    * **path** (*str*) – Path to file in the repository.
+    * **path** (*str*) – Path to file in the repository
 
 
 
@@ -103,7 +103,7 @@ Set polling interval
 
 * **Parameters**
 
-    **seconds** (*int*) – Amount of time between synchronization (in seconds)
+    **seconds** (*int*) – Amount of time between synchronization (in seconds, default is 5 seconds)
 
 
 

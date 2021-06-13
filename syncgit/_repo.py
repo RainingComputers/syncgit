@@ -29,7 +29,7 @@ class SyncConfig:
                 to python string), :code:`"json"`, :code:`"yaml"` (converted to python dict)
                 and :code:`"module"` (will be imported the file as python module)
             path: str
-                Path to file in the repository.
+                Path to file in the repository
         '''
         self.name = name
         self.type = sync_type
@@ -72,7 +72,7 @@ class Repo:
         Parameters
         ----------
         seconds : int
-            Amount of time between synchronization (in seconds)
+            Amount of time between synchronization (in seconds, default is 5 seconds)
         '''
         self.__poll_interval = seconds
 
