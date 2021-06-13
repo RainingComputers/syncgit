@@ -22,7 +22,6 @@ import os
 
 from typing import List
 import sphinx_rtd_theme
-import sphinx_markdown_builder
 
 sys.path.insert(0, os.path.abspath('..'))
 

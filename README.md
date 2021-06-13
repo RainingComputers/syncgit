@@ -116,5 +116,5 @@ Set callback to be call after synchronization is complete
 
 
 
-#### commit_hash()
+#### commit_hash
 The commit hash of latest sync
