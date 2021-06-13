@@ -1,4 +1,4 @@
-.PHONY: help clean test lint quality build push
+.PHONY: help clean test lint quality build push docs
 
 help:
 	@echo "Note: Please make sure you are in pipenv shell"
@@ -11,6 +11,8 @@ help:
 	@echo "    Print pylint score"
 	@echo "quality"
 	@echo "	   Print code quality report"
+	@echo "docs"
+	@echo "    Build and open docs"
 	@echo ""
 
 clean:
@@ -30,3 +32,7 @@ quality:
 	python3 -m radon mi src
 	python3 -m radon cc src
 
+docs:
+	make -C docs/ clean
+	make -C docs/ html
+	xdg-open docs/_build/html/index.html

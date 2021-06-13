@@ -4,13 +4,16 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pyyaml = "*"
+PyYAML = "*"
 
 [dev-packages]
 pylint = "*"
 mypy = "*"
 autopep8 = "*"
 radon = "*"
+sphinx-bootstrap-theme = "*"
+sphinx-rtd-theme = "*"
+Sphinx = "*"
 
 [requires]
 python_version = "3.8"

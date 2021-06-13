@@ -4,7 +4,7 @@ import shutil
 
 from typing import List
 
-from src._config import SYNCGIT_CMD_TIMEOUT, SYNCGIT_REPO_DIR_NAME
+from syncgit._config import SYNCGIT_CMD_TIMEOUT, SYNCGIT_REPO_DIR_NAME
 
 
 def _exec_cmd(command: List[str]) -> None:

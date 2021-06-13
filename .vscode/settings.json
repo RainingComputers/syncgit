@@ -1,9 +1,18 @@
 {
     "cSpell.words": [
+        "autoattribute",
+        "autoclass",
+        "automethod",
+        "genindex",
         "getenv",
         "gitcmd",
+        "maxdepth",
+        "modindex",
         "pylint",
-        "subp"
+        "quickstart",
+        "subp",
+        "syncgit's",
+        "toctree"
     ],
     
     "python.linting.pylintEnabled": true,
