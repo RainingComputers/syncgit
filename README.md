@@ -11,6 +11,12 @@ otherwise you will get a timeout exception.
 python -m pip install syncgit
 ```
 
+### Documentation
+
+https://syncgit.readthedocs.io/en/latest/
+
+[Short version available at the end of this README](#Class documentation)
+
 ### Example 
 
 ```python
