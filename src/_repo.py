@@ -15,7 +15,7 @@ import yaml
 
 from src import _gitcmd as gitcmd
 from src._exceptions import UnknownTypeException
-from src._config import SYNCGIT_POLL_INTERVAL
+from src._config import SYNCGIT_DEFAULT_POLL_INTERVAL
 
 
 SyncConfig = namedtuple("SyncConfig", "name type file_path")
@@ -31,10 +31,14 @@ class Repo:
         self.__config: List[SyncConfig]
         self.__current_hash: str = ""
         self.__update_callback: Optional[Callable[[Any], None]] = None
+        self.__poll_interval = SYNCGIT_DEFAULT_POLL_INTERVAL
 
     @property
     def commit_hash(self) -> str:
         return self.__current_hash
+
+    def set_poll_interval(self, seconds: int) -> None:
+        self.__poll_interval = seconds
 
     def set_update_callback(self, callback: Callable[[Any], None]) -> None:
         self.__update_callback = callback
@@ -53,7 +57,7 @@ class Repo:
 
         while True:
             self.__update()
-            time.sleep(SYNCGIT_POLL_INTERVAL - ((time.time() - starttime) % SYNCGIT_POLL_INTERVAL))
+            time.sleep(self.__poll_interval - ((time.time() - starttime) % self.__poll_interval))
 
     def set_config(self, config: List[SyncConfig]) -> None:
         self.__config = config
