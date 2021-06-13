@@ -16,22 +16,22 @@ help:
 	@echo ""
 
 clean:
-	rm -f -r src/__pycache__
-	rm -f -r src/zipdata/
+	rm -f -r syncgit/__pycache__
+	rm -f -r syncgit/zipdata/
 	rm -f -r .pytest_cache/
 	find . -type d -name  "__pycache__" -exec rm -r {} +
 	rm -f -r .repos/
 	make -C docs/ clean
 
 test:
-	pytest src/tests
+	pytest syncgit/tests
 
 lint:
-	pylint src  --rcfile ./.pylintrc
+	pylint syncgit  --rcfile ./.pylintrc
 
 quality:
-	python3 -m radon mi src
-	python3 -m radon cc src
+	python3 -m radon mi syncgit
+	python3 -m radon cc syncgit
 
 docs:
 	make -C docs/ clean

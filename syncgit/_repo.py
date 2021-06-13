@@ -52,7 +52,7 @@ class Repo:
         self.__url = url
         self.__branch = branch
         self.__values: Dict[str, Any] = {}
-        self.__lock = Lock()
+        self.__locks: Dict[str, Lock] = {}
         self.__config: List[SyncConfig]
         self.__current_hash: str = ""
         self.__update_callback: Optional[Callable[[Any], None]] = None
@@ -120,6 +120,15 @@ class Repo:
         '''
         self.__config = config
 
+    def __get_lock(self, key: str) -> Lock:
+        try:
+            lock = self.__locks[key]
+        except KeyError:
+            lock = Lock()
+            self.__locks[key] = lock
+
+        return lock
+
     def __update(self) -> None:
         new_hash = self.__pull()
 
@@ -131,7 +140,7 @@ class Repo:
         files = self.__get_files()
 
         for config in self.__config:
-            with self.__lock:
+            with self.__get_lock(config.name):
                 self.__set_value(config, files[config.file_path])
 
         if self.__update_callback is not None:
@@ -168,4 +177,5 @@ class Repo:
         return files
 
     def __getattr__(self, name: str) -> Any:
-        return self.__values[name]
+        with self.__locks[name]:
+            return self.__values[name]

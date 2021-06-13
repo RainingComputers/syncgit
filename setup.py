@@ -5,7 +5,7 @@ with open("README.md", "r") as f:
 
 setuptools.setup(
     name="syncgit",
-    version="0.0.2",
+    version="0.0.3",
     author="RainingComputers",
     author_email="vishnu.vish.shankar@gmail.com",
     description="Sync python dicts, strings ad modules to git repository.",
