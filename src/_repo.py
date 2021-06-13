@@ -14,6 +14,7 @@ from threading import Lock, Thread
 import yaml
 
 from src import _gitcmd as gitcmd
+from src._exceptions import UnknownTypeException
 from src._config import SYNCGIT_POLL_INTERVAL
 
 
@@ -83,6 +84,8 @@ class Repo:
             self.__values[config.name] = yaml.safe_load(str_value)
         elif config.type == "module":
             self.__set_module(config.name, str_value)
+        else:
+            raise UnknownTypeException
 
     def __set_module(self, name: str, str_src: str) -> None:
         compiled = compile(str_src, '', 'exec')
