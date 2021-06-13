@@ -1,0 +1,18 @@
+{
+    "cSpell.words": [
+        "getenv",
+        "gitcmd",
+        "pylint",
+        "subp"
+    ],
+    
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true,
+    "python.linting.pycodestyleEnabled": true,
+    "python.linting.pycodestyleArgs": ["--max-line-length=120"],
+    "python.linting.pylintCategorySeverity.convention": "Error",
+    
+    "python.linting.mypyEnabled": true,
+
+    "python.pythonPath": "./.venv/bin/python"
+}

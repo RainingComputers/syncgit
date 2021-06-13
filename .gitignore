@@ -1,0 +1,79 @@
+# Pickle files
+*.pkl
+
+# Datasets
+*.data
+*.gz
+*.*data
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# pytest
+.pytest_cache/
+
+# profiling
+*.dat
+profile_*.png
+
+# pyenv
+.python-version
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Windows thumbnail cache files
+Thumbs.db
+ehthumbs.db
+ehthumbs_vista.db
+
+# Dump file
+*.stackdump
+
+# Folder config file
+[Dd]esktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# graphviz
+*.gv
+*.gv.png
+*.gv.pdf
+
+# temp folders and files
+temp/
+zipdata/
+TODO.txt
+temp.py
+.repos/
