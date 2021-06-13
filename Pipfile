@@ -14,6 +14,7 @@ radon = "*"
 sphinx-bootstrap-theme = "*"
 sphinx-rtd-theme = "*"
 Sphinx = "*"
+sphinx-markdown-builder = "*"
 
 [requires]
 python_version = "3.8"

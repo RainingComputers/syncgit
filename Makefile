@@ -21,6 +21,7 @@ clean:
 	rm -f -r .pytest_cache/
 	find . -type d -name  "__pycache__" -exec rm -r {} +
 	rm -f -r .repos/
+	make -C docs/ clean
 
 test:
 	pytest src/tests
@@ -34,5 +35,4 @@ quality:
 
 docs:
 	make -C docs/ clean
-	make -C docs/ html
-	xdg-open docs/_build/html/index.html
+	make -C docs/ markdown

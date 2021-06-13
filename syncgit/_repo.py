@@ -25,9 +25,11 @@ class SyncConfig:
             name: str
                 Name of the attribute alias
             sync_type : str
-                File type. Available options are :code:`"text"` (plain text file),
-                :code:`"json"`, :code:`"yaml"` (converted to python dict) and :code:`"module"`
-                (will import the file as python module)
+                File type. Available options are :code:`"text"` (plain text file, will be converted
+                to python string), :code:`"json"`, :code:`"yaml"` (converted to python dict)
+                and :code:`"module"` (will be imported the file as python module)
+            path: str
+                Path to file in the repository.
         '''
         self.name = name
         self.type = sync_type

@@ -56,9 +56,12 @@ while True:
     * **name** (*str*) – Name of the attribute alias
 
 
-    * **sync_type** (*str*) – File type. Available options are `"text"` (plain text file),
-    `"json"`, `"yaml"` (converted to python dict) and `"module"`
-    (will import the file as python module)
+    * **sync_type** (*str*) – File type. Available options are `"text"` (plain text file, will be converted
+    to python string), `"json"`, `"yaml"` (converted to python dict)
+    and `"module"` (will be imported the file as python module)
+
+
+    * **path** (*str*) – Path to file in the repository.
 
 
 
