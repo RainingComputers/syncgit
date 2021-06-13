@@ -1,12 +1,12 @@
 # syncgit
 
-Sync python dicts, strings ad modules to git repository.
-
-
-## Example 
+Sync python dicts, strings and modules to git repository.
 
 NOTE: syncgit calls git using subprocess, setup git so it does not ask for username or password,
 otherwise you will get a timeout exception.
+
+
+### Example 
 
 ```python
 import time
