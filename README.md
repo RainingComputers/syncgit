@@ -88,7 +88,7 @@ Configure attributes to sync
 
 * **Parameters**
 
-    **config** (*List**[**SyncConfig**]*) – List of SyncConfig specifying attribute names, file path,
+    **config** (*List[SyncConfig]*) – List of SyncConfig specifying attribute names, file path,
     type of the file (see `SyncConfig`). These configs will be available as class attributes.
 
 
@@ -113,7 +113,7 @@ Set callback to be call after synchronization is complete
 
 * **Parameters**
 
-    **callback** (*Callable**[**[**Repo**]**, **None**]*) – This callback will be called when changes are pushed to the repo and
+    **callback** (*Callable[[Repo], None]*) – This callback will be called when changes are pushed to the repo and
     the new changes have been synchronized. The callback should accept one
     argument, the Repo class
 
