@@ -35,4 +35,5 @@ quality:
 
 docs:
 	make -C docs/ clean
-	make -C docs/ markdown
+	make -C docs/ html
+	xdg-open docs/_build/html/index.html
