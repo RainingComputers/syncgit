@@ -1,7 +1,7 @@
 import subprocess
 import os
 import shutil
-import signal
+from contextlib import suppress
 
 from typing import List
 
@@ -19,22 +19,14 @@ class RepoInfo:
         return os.path.join(self.dir, file_name)
 
 
-def _preexec_function() -> None:
-    # Ignore the SIGINT signal by setting the handler to the standard
-    # signal handler SIG_IGN.
-    signal.signal(signal.SIGINT, signal.SIG_IGN)
-
-
 def _exec_cmd(command: List[str]) -> None:
     subprocess.run(command, timeout=SYNCGIT_CMD_TIMEOUT,
-                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-                   preexec_fn=_preexec_function, check=True)
+                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 
 
 def _exec_cmd_str(command: List[str]) -> str:
     subp = subprocess.run(command, timeout=SYNCGIT_CMD_TIMEOUT,
-                          stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
-                          preexec_fn=_preexec_function, check=True)
+                          stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, check=True)
 
     return subp.stdout.decode('utf-8')
 
@@ -59,7 +51,8 @@ def commit_hash(repo_info: RepoInfo) -> str:
 def pull(repo_info: RepoInfo) -> str:
     _create_repo_dir(repo_info)
 
-    _exec_cmd(_git(repo_info) + ["pull", "origin", repo_info.branch])
+    with suppress(subprocess.SubprocessError):
+        _exec_cmd(_git(repo_info) + ["pull", "origin", repo_info.branch])
 
     return commit_hash(repo_info)
 
