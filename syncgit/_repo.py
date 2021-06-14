@@ -98,7 +98,8 @@ class Repo:
         ----------
         config : List[SyncConfig]
             List of SyncConfig specifying attribute names, file path,
-            type of the file (see :py:class:`SyncConfig`). These configs will be available as class attributes.
+            type of the file (see :py:class:`SyncConfig`). These configs will be available
+            as class attributes.
         '''
         self.__config = config
 
