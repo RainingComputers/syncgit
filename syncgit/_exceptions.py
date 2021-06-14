@@ -1,2 +1,0 @@
-class UnknownTypeException(Exception):
-    pass

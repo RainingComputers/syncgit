@@ -7,6 +7,17 @@ from typing import List
 from syncgit._config import SYNCGIT_CMD_TIMEOUT, SYNCGIT_REPO_DIR_NAME
 
 
+class RepoInfo:
+    def __init__(self, local_name: str, url: str, branch: str) -> None:
+        self.local_name = local_name
+        self.url = url
+        self.branch = branch
+        self.dir = os.path.join(SYNCGIT_REPO_DIR_NAME, self.local_name)
+
+    def get_abs_path(self, file_name: str) -> str:
+        return os.path.join(self.dir, file_name)
+
+
 def _exec_cmd(command: List[str]) -> None:
     subprocess.run(command, timeout=SYNCGIT_CMD_TIMEOUT,
                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
@@ -18,39 +29,33 @@ def _exec_cmd_str(command: List[str]) -> str:
     return subp.stdout.decode('utf-8')
 
 
-def _get_repo_dir(local_name: str) -> str:
-    return f"./{SYNCGIT_REPO_DIR_NAME}/{local_name}"
+def _git(repo_info: RepoInfo) -> List[str]:
+    return ["git", "-C", repo_info.dir]
 
 
-def _git(local_name: str) -> List[str]:
-    return ["git", "-C", _get_repo_dir(local_name)]
-
-
-def _create_repo_dir(local_name: str, url: str) -> None:
-    repo_dir = _get_repo_dir(local_name)
-
-    if os.path.exists(repo_dir):
+def _create_repo_dir(repo_info: RepoInfo) -> None:
+    if os.path.exists(repo_info.dir):
         return
 
-    os.makedirs(repo_dir)
-    _exec_cmd(_git(local_name) + ["init"])
-    _exec_cmd(_git(local_name) + ["remote", "add", "origin", url])
+    os.makedirs(repo_info.dir)
+    _exec_cmd(_git(repo_info) + ["init"])
+    _exec_cmd(_git(repo_info) + ["remote", "add", "origin", repo_info.url])
 
 
-def commit_hash(local_name: str) -> str:
-    return _exec_cmd_str(_git(local_name) + ["show", "-s", "--format=%H"]).rstrip()
+def commit_hash(repo_info: RepoInfo) -> str:
+    return _exec_cmd_str(_git(repo_info) + ["show", "-s", "--format=%H"]).rstrip()
 
 
-def pull(local_name: str, url: str, branch: str = "main") -> str:
-    _create_repo_dir(local_name, url)
+def pull(repo_info: RepoInfo) -> str:
+    _create_repo_dir(repo_info)
 
-    _exec_cmd(_git(local_name) + ["pull", "origin", branch])
+    _exec_cmd(_git(repo_info) + ["pull", "origin", repo_info.branch])
 
-    return commit_hash(local_name)
+    return commit_hash(repo_info)
 
 
-def remove(local_name: str) -> None:
-    shutil.rmtree(_get_repo_dir(local_name))
+def remove(repo_info: RepoInfo) -> None:
+    shutil.rmtree(repo_info.dir)
 
 
 def remove_all() -> None:

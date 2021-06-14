@@ -6,15 +6,19 @@ from typing import Optional
 from types import ModuleType
 
 import time
-import os
 import json
-from threading import Lock, Thread
+from threading import Thread
 
 import yaml
 
 from syncgit import _gitcmd as gitcmd
-from syncgit._exceptions import UnknownTypeException
+from syncgit._gitcmd import RepoInfo
+from syncgit._threadsafe_dict import ThreadSafeDict
 from syncgit._config import SYNCGIT_DEFAULT_POLL_INTERVAL
+
+
+class UnknownTypeException(Exception):
+    pass
 
 
 class SyncConfig:
@@ -48,13 +52,10 @@ class Repo:
         branch : str
             Name of the branch to sync to
         '''
-        self.__local_name = name
-        self.__url = url
-        self.__branch = branch
-        self.__values: Dict[str, Any] = {}
-        self.__locks: Dict[str, Lock] = {}
+        self.__repo_info: RepoInfo = RepoInfo(name, url, branch)
+        self.__commit_hash = ""
+        self.__values: ThreadSafeDict = ThreadSafeDict()
         self.__config: List[SyncConfig]
-        self.__current_hash: str = ""
         self.__update_callback: Optional[Callable[[Any], None]] = None
         self.__poll_interval = SYNCGIT_DEFAULT_POLL_INTERVAL
 
@@ -63,7 +64,7 @@ class Repo:
         '''
         The commit hash of latest sync
         '''
-        return self.__current_hash
+        return self.__commit_hash
 
     def set_poll_interval(self, seconds: int) -> None:
         '''
@@ -89,25 +90,6 @@ class Repo:
         '''
         self.__update_callback = callback
 
-    def start_sync(self) -> None:
-        '''
-        Start sync to git repository
-        '''
-        self.__update()
-        poll_thread = Thread(target=self.__poll_loop)
-        poll_thread.setDaemon(True)
-        poll_thread.start()
-
-    def __pull(self) -> str:
-        return gitcmd.pull(self.__local_name, self.__url, self.__branch)
-
-    def __poll_loop(self) -> None:
-        starttime = time.time()
-
-        while True:
-            self.__update()
-            time.sleep(self.__poll_interval - ((time.time() - starttime) % self.__poll_interval))
-
     def set_config(self, config: List[SyncConfig]) -> None:
         '''
         Configure attributes to sync
@@ -120,28 +102,34 @@ class Repo:
         '''
         self.__config = config
 
-    def __get_lock(self, key: str) -> Lock:
-        try:
-            lock = self.__locks[key]
-        except KeyError:
-            lock = Lock()
-            self.__locks[key] = lock
+    def start_sync(self) -> None:
+        '''
+        Start sync to git repository
+        '''
+        self.__update()
+        poll_thread = Thread(target=self.__poll_loop)
+        poll_thread.setDaemon(True)
+        poll_thread.start()
 
-        return lock
+    def __poll_loop(self) -> None:
+        starttime = time.time()
+
+        while True:
+            self.__update()
+            time.sleep(self.__poll_interval - ((time.time() - starttime) % self.__poll_interval))
 
     def __update(self) -> None:
-        new_hash = self.__pull()
+        new_commit_hash = gitcmd.pull(self.__repo_info)
 
-        if new_hash == self.__current_hash:
+        if new_commit_hash == self.commit_hash:
             return
 
-        self.__current_hash = new_hash
+        self.__commit_hash = new_commit_hash
 
         files = self.__get_files()
 
         for config in self.__config:
-            with self.__get_lock(config.name):
-                self.__set_value(config, files[config.file_path])
+            self.__set_value(config, files[config.file_path])
 
         if self.__update_callback is not None:
             self.__update_callback(self)
@@ -169,7 +157,7 @@ class Repo:
 
         for config in self.__config:
             file_path = config.file_path
-            file_path_absolute = os.path.join(gitcmd.SYNCGIT_REPO_DIR_NAME, self.__local_name, file_path)
+            file_path_absolute = self.__repo_info.get_abs_path(file_path)
 
             with open(file_path_absolute) as file:
                 files[file_path] = file.read()
@@ -177,5 +165,4 @@ class Repo:
         return files
 
     def __getattr__(self, name: str) -> Any:
-        with self.__locks[name]:
-            return self.__values[name]
+        return self.__values[name]
