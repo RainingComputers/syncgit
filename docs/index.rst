@@ -29,6 +29,8 @@ Class documentation
    .. automethod:: set_config
 
    .. automethod:: start_sync
+
+   .. automethod:: stop_sync
    
    .. automethod:: set_poll_interval
    
@@ -66,9 +68,14 @@ Example
    rp.start_sync()
 
    # Imported files will be available as attributes on the repo class
-   while True:
-       time.sleep(1)
-       print(rp.about_alice)
-       print(rp.about_bob)
-       print(rp.text)
-       rp.hello_module.say_hello("Alice")
+   try:
+       while True:
+           time.sleep(1)
+           print(rp.about_alice)
+           print(rp.about_bob)
+           print(rp.text)
+           rp.hello_module.say_hello("Alice")
+   except KeyboardInterrupt:
+       print("Stopping sync")
+       rp.stop_sync()
+

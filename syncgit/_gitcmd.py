@@ -1,6 +1,7 @@
 import subprocess
 import os
 import shutil
+import signal
 
 from typing import List
 
@@ -18,14 +19,23 @@ class RepoInfo:
         return os.path.join(self.dir, file_name)
 
 
+def _preexec_function() -> None:
+    # Ignore the SIGINT signal by setting the handler to the standard
+    # signal handler SIG_IGN.
+    signal.signal(signal.SIGINT, signal.SIG_IGN)
+
+
 def _exec_cmd(command: List[str]) -> None:
     subprocess.run(command, timeout=SYNCGIT_CMD_TIMEOUT,
-                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                   preexec_fn=_preexec_function, check=True)
 
 
 def _exec_cmd_str(command: List[str]) -> str:
     subp = subprocess.run(command, timeout=SYNCGIT_CMD_TIMEOUT,
-                          stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, check=True)
+                          stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+                          preexec_fn=_preexec_function, check=True)
+
     return subp.stdout.decode('utf-8')
 
 

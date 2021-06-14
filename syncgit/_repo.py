@@ -5,15 +5,13 @@ from typing import Callable
 from typing import Optional
 from types import ModuleType
 
-import time
 import json
-from threading import Thread
-
 import yaml
 
 from syncgit import _gitcmd as gitcmd
 from syncgit._gitcmd import RepoInfo
 from syncgit._threadsafe_dict import ThreadSafeDict
+from syncgit._threadloop import ThreadLoop
 from syncgit._config import SYNCGIT_DEFAULT_POLL_INTERVAL
 
 
@@ -57,7 +55,7 @@ class Repo:
         self.__values: ThreadSafeDict = ThreadSafeDict()
         self.__config: List[SyncConfig]
         self.__update_callback: Optional[Callable[[Any], None]] = None
-        self.__poll_interval = SYNCGIT_DEFAULT_POLL_INTERVAL
+        self.__thread_loop = ThreadLoop(SYNCGIT_DEFAULT_POLL_INTERVAL, self.__update)
 
     @property
     def commit_hash(self) -> str:
@@ -75,7 +73,7 @@ class Repo:
         seconds : int
             Amount of time between synchronization (in seconds, default is 5 seconds)
         '''
-        self.__poll_interval = seconds
+        self.__thread_loop.set_interval(seconds)
 
     def set_update_callback(self, callback: Callable[[Any], None]) -> None:
         '''
@@ -107,25 +105,26 @@ class Repo:
         '''
         Start sync to git repository
         '''
-        self.__update()
-        poll_thread = Thread(target=self.__poll_loop)
-        poll_thread.setDaemon(True)
-        poll_thread.start()
+        self.__thread_loop.start()
 
-    def __poll_loop(self) -> None:
-        starttime = time.time()
+    def stop_sync(self) -> None:
+        '''
+        Stop sync
+        '''
+        self.__thread_loop.stop()
 
-        while True:
-            self.__update()
-            time.sleep(self.__poll_interval - ((time.time() - starttime) % self.__poll_interval))
-
-    def __update(self) -> None:
+    def __pull(self) -> bool:
         new_commit_hash = gitcmd.pull(self.__repo_info)
 
         if new_commit_hash == self.commit_hash:
-            return
+            return False
 
         self.__commit_hash = new_commit_hash
+        return True
+
+    def __update(self) -> None:
+        if not self.__pull():
+            return
 
         files = self.__get_files()
 
