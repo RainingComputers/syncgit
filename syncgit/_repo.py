@@ -109,7 +109,7 @@ class Repo:
 
     def stop_sync(self) -> None:
         '''
-        Stop sync
+        Stop sync to git repository
         '''
         self.__thread_loop.stop()
 
