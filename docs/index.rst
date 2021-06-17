@@ -48,8 +48,11 @@ Example
    from syncgit import Repo, SyncConfig
 
    # This callback is called when changes are pushed to the repo
-   def update_callback(repo: Repo) -> None:
-       print(f"Updated to {repo.commit_hash}")
+   def update_callback(repo: Repo, changes: List[SyncConfig]) -> None:
+       print(f"Updated to commit {repo.commit_hash}")
+   
+       for change in changes:
+           print(f"Updated {change.name}")
 
 
    # Create repo class and import files from repository

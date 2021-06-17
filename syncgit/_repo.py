@@ -72,7 +72,7 @@ class Repo:
         self.__commit_hash = ""
         self.__values: ThreadSafeDict = ThreadSafeDict()
         self.__config: List[SyncConfig]
-        self.__update_callback: Optional[Callable[[Any], None]] = None
+        self.__update_callback: Optional[Callable[[Any, List[SyncConfig]], None]] = None
         self.__thread_loop = ThreadLoop(
             SYNCGIT_DEFAULT_POLL_INTERVAL, self.__update)
 
@@ -94,16 +94,17 @@ class Repo:
         '''
         self.__thread_loop.set_interval(seconds)
 
-    def set_update_callback(self, callback: Callable[[Any], None]) -> None:
+    def set_update_callback(self, callback: Callable[[Any, List[SyncConfig]], None]) -> None:
         '''
         Set callback to be call after synchronization is complete
 
         Parameters
         ----------
-        callback : Callable[[Repo], None]
+        callback : Callable[[Repo, List[SyncConfig]], None]
             This callback will be called when changes are pushed to the repo and
-            the new changes have been synchronized. The callback should accept one
-            argument, the Repo class
+            the new changes have been synchronized. The callback should accept two
+            arguments, the Repo class and List[SyncConfig], config attributes which
+            got updated
         '''
         self.__update_callback = callback
 
@@ -153,7 +154,7 @@ class Repo:
             self.__set_value(config, files[config.file_path])
 
         if self.__update_callback is not None:
-            self.__update_callback(self)
+            self.__update_callback(self, changed_configs)
 
     def __set_value(self, config: SyncConfig, str_value: str) -> None:
         if config.type == "text":
