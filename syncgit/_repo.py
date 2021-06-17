@@ -145,9 +145,11 @@ class Repo:
         if not self.__pull():
             return
 
-        files = self.__get_files()
+        changed_configs = self.__get_changed_configs()
 
-        for config in self.__config:
+        files = self.__get_files(changed_configs)
+
+        for config in changed_configs:
             self.__set_value(config, files[config.file_path])
 
         if self.__update_callback is not None:
@@ -171,15 +173,27 @@ class Repo:
         exec(compiled, module.__dict__)  # pylint: disable=exec-used
         self.__values[name] = module
 
-    def __get_files(self) -> Dict[str, str]:
-        files: Dict[str, str] = {}
+    def __get_changed_configs(self) -> List[SyncConfig]:
+        changes = gitcmd.changes(self.__repo_info)
+        first_update = len(self.__values) == 0
+        changed_configs = []
 
         for config in self.__config:
-            file_path = config.file_path
-            file_path_absolute = self.__repo_info.get_abs_path(file_path)
+            if config.file_path not in changes and not first_update:
+                continue
+
+            changed_configs.append(config)
+
+        return changed_configs
+
+    def __get_files(self, configs: List[SyncConfig]) -> Dict[str, str]:
+        files: Dict[str, str] = {}
+
+        for config in configs:
+            file_path_absolute = self.__repo_info.get_abs_path(config.file_path)
 
             with open(file_path_absolute) as file:
-                files[file_path] = file.read()
+                files[config.file_path] = file.read()
 
         return files
 

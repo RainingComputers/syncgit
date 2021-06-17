@@ -25,3 +25,6 @@ class ThreadSafeDict:
     def __getitem__(self, key: str) -> Any:
         with self.__locks[key]:
             return self.__values[key]
+
+    def __len__(self) -> int:
+        return len(self.__values)

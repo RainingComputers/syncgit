@@ -57,6 +57,10 @@ def pull(repo_info: RepoInfo) -> str:
     return commit_hash(repo_info)
 
 
+def changes(repo_info: RepoInfo) -> List[str]:
+    return _exec_cmd_str(_git(repo_info) + ["diff", "--name-only", "HEAD^", "HEAD"]).splitlines()
+
+
 def remove(repo_info: RepoInfo) -> None:
     shutil.rmtree(repo_info.dir)
 
