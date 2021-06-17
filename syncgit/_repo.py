@@ -32,7 +32,7 @@ class SyncConfig:
             sync_type : str
                 File type. Available options are :code:`"text"` (plain text file, will be converted
                 to python string), :code:`"json"`, :code:`"yaml"` (converted to python dict)
-                and :code:`"module"` (will be imported the file as python module). `"auto"` to
+                and :code:`"module"` (will be imported the file as python module). :code:`"auto"` to
                 automatically detect sync type from file extension
 
         '''
