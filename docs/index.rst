@@ -43,6 +43,8 @@ Example
 
 .. code-block:: python
 
+   from typing import List
+   
    import time
    
    from syncgit import Repo, SyncConfig
@@ -53,7 +55,6 @@ Example
    
        for change in changes:
            print(f"Updated {change.name}")
-   
    
    # Create repo class and import files from repository
    rp = Repo("example_repo", "git@github.com:user/example_repo.git", "main")

@@ -18,6 +18,8 @@ https://syncgit.readthedocs.io/en/latest/
 ### Example 
 
 ```python
+from typing import List
+
 import time
 
 from syncgit import Repo, SyncConfig
@@ -28,7 +30,6 @@ def update_callback(repo: Repo, changes: List[SyncConfig]) -> None:
 
     for change in changes:
         print(f"Updated {change.name}")
-
 
 # Create repo class and import files from repository
 rp = Repo("example_repo", "git@github.com:user/example_repo.git", "main")
