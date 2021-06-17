@@ -22,6 +22,8 @@ clean:
 	find . -type d -name  "__pycache__" -exec rm -r {} +
 	rm -f -r .repos/
 	make -C docs/ clean
+	rm -f -r build/
+	rm -f -r dist/
 
 test:
 	pytest syncgit/tests
