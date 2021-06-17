@@ -33,10 +33,10 @@ def update_callback(repo: Repo, changes: List[SyncConfig]) -> None:
 # Create repo class and import files from repository
 rp = Repo("example_repo", "git@github.com:user/example_repo.git", "main")
 rp.set_config([
-    SyncConfig("about_alice", "json", "alice.json"),
-    SyncConfig("about_bob", "yaml", "bob.yml"),
-    SyncConfig("text", "text", "text_file.txt"),
-    SyncConfig("hello_module", "module", "say_hello.py")
+    SyncConfig("about_alice", "alice.json", "json"),
+    SyncConfig("about_bob", "bob.yml"),
+    SyncConfig("text", "text_file.txt", "text"),
+    SyncConfig("hello_module", "say_hello.py")
 ])
 
 # Register call back
