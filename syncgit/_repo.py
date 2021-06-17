@@ -5,6 +5,7 @@ from typing import Callable
 from typing import Optional
 from types import ModuleType
 
+import os
 import json
 import yaml
 
@@ -20,22 +21,39 @@ class UnknownTypeException(Exception):
 
 
 class SyncConfig:
-    def __init__(self, name: str, sync_type: str, path: str):
+    def __init__(self, name: str, path: str, sync_type: str = "auto") -> None:
         '''
         Parameters
         ----------
             name: str
                 Name of the attribute alias
+            path: str
+                Path to file in the repository
             sync_type : str
                 File type. Available options are :code:`"text"` (plain text file, will be converted
                 to python string), :code:`"json"`, :code:`"yaml"` (converted to python dict)
-                and :code:`"module"` (will be imported the file as python module)
-            path: str
-                Path to file in the repository
+                and :code:`"module"` (will be imported the file as python module). `"auto"` to
+                automatically detect sync type from file extension
+
         '''
         self.name = name
-        self.type = sync_type
         self.file_path = path
+        self.type = sync_type
+
+        if sync_type == "auto":
+            self.__get_auto_type()
+
+    def __get_auto_type(self) -> None:
+        file_ext = os.path.splitext(self.file_path)[-1]
+
+        if file_ext in [".yaml", ".yml"]:
+            self.type = "yaml"
+        elif file_ext == ".json":
+            self.type = "json"
+        elif file_ext == ".py":
+            self.type = "module"
+        else:
+            self.type = "text"
 
 
 class Repo:
@@ -55,7 +73,8 @@ class Repo:
         self.__values: ThreadSafeDict = ThreadSafeDict()
         self.__config: List[SyncConfig]
         self.__update_callback: Optional[Callable[[Any], None]] = None
-        self.__thread_loop = ThreadLoop(SYNCGIT_DEFAULT_POLL_INTERVAL, self.__update)
+        self.__thread_loop = ThreadLoop(
+            SYNCGIT_DEFAULT_POLL_INTERVAL, self.__update)
 
     @property
     def commit_hash(self) -> str:
