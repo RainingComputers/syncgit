@@ -32,7 +32,7 @@ copyright = '2021, Vishnu Shankar B'
 author = 'Vishnu Shankar B'
 
 # The full version, including alpha/beta/rc tags
-release = '0.1.4'
+release = '0.2.4'
 
 
 # -- General configuration ---------------------------------------------------
