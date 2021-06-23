@@ -16,7 +16,7 @@ from syncgit._threadloop import ThreadLoop
 from syncgit._config import SYNCGIT_DEFAULT_POLL_INTERVAL
 
 
-class UnknownTypeException(Exception):
+class UnknownSyncTypeError(Exception):
     pass
 
 
@@ -57,7 +57,7 @@ class SyncConfig:
 
 
 class Repo:
-    def __init__(self, name: str, url: str, branch: str) -> None:
+    def __init__(self, name: str, url: str, branch: str, dir_path: Optional[str] = None) -> None:
         '''
         Parameters
         ----------
@@ -67,8 +67,11 @@ class Repo:
             Repository URL to sync to (can be ssh or https)
         branch : str
             Name of the branch to sync to
+        dir_path : Optional[str]
+            Directory path to download and sync the repo to, will be synced
+            to :code:`./.repos/<name>/` if :code:`None`
         '''
-        self.__repo_info: RepoInfo = RepoInfo(name, url, branch)
+        self.__repo_info: RepoInfo = RepoInfo(name, url, branch, dir_path)
         self.__commit_hash = ""
         self.__values: ThreadSafeDict = ThreadSafeDict()
         self.__config: List[SyncConfig]
@@ -166,7 +169,7 @@ class Repo:
         elif config.type == "module":
             self.__set_module(config.name, str_value)
         else:
-            raise UnknownTypeException
+            raise UnknownSyncTypeError
 
     def __set_module(self, name: str, str_src: str) -> None:
         compiled = compile(str_src, '', 'exec')

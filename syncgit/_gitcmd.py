@@ -4,16 +4,21 @@ import shutil
 from contextlib import suppress
 
 from typing import List
+from typing import Optional
 
 from syncgit._config import SYNCGIT_CMD_TIMEOUT, SYNCGIT_REPO_DIR_NAME
 
 
 class RepoInfo:
-    def __init__(self, local_name: str, url: str, branch: str) -> None:
+    def __init__(self, local_name: str, url: str, branch: str, dir_path: Optional[str]) -> None:
         self.local_name = local_name
         self.url = url
         self.branch = branch
-        self.dir = os.path.join(SYNCGIT_REPO_DIR_NAME, self.local_name)
+
+        if dir_path is None:
+            self.dir = os.path.join(SYNCGIT_REPO_DIR_NAME, self.local_name)
+        else:
+            self.dir = dir_path
 
     def get_abs_path(self, file_name: str) -> str:
         return os.path.join(self.dir, file_name)
