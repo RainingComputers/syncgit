@@ -29,5 +29,5 @@ class ThreadLoop:
         starttime = time.time()
 
         while self.__running:
-            self.__callback()
             time.sleep(self.__interval - ((time.time() - starttime) % self.__interval))
+            self.__callback()

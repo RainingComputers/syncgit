@@ -1,4 +1,4 @@
-.PHONY: help clean test lint quality build push docs
+.PHONY: help clean test lint quality docs
 
 help:
 	@echo "Note: Please make sure you are in pipenv shell"
@@ -26,7 +26,7 @@ clean:
 	rm -f -r dist/
 
 test:
-	pytest syncgit/tests
+	pytest tests
 
 lint:
 	pylint syncgit  --rcfile ./.pylintrc

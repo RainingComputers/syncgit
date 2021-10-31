@@ -7,7 +7,6 @@ name = "pypi"
 PyYAML = "*"
 
 [dev-packages]
-syncgit = {editable = true,path = "."}
 pylint = "*"
 mypy = "*"
 autopep8 = "*"
@@ -16,6 +15,11 @@ sphinx-bootstrap-theme = "*"
 sphinx-rtd-theme = "*"
 Sphinx = "*"
 sphinx-markdown-builder = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.8"
+
+[dev-packages.syncgit]
+editable = true
+path = "."

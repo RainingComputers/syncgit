@@ -31,6 +31,8 @@ Class documentation
    .. automethod:: start_sync
 
    .. automethod:: stop_sync
+
+   .. automethod:: sync
    
    .. automethod:: set_poll_interval
    
@@ -40,6 +42,34 @@ Class documentation
 
 Example
 -------
+
+**Example repo**
+
+.. code-block::
+
+    syncgit-test
+    ├── alice.json
+    │   └── {
+    │           "name": "Alice",
+    │           "age": 24,
+    │           "interests": [
+    │               "Programming",
+    │               "Skiing"
+    │           ]
+    │       }
+    ├── bob.yml
+    │   └── name: Bob
+    │       age: 22
+    │       interests:
+    │         - Reading
+    │         - Drawing
+    ├── say_hello.py
+    │   └── def say_hello(name): 
+    │           print(f"Hello {name}, nice to meet you")
+    └── text_file.txt
+        └── This is a text file
+
+**Code**
 
 .. code-block:: python
 
@@ -57,7 +87,7 @@ Example
            print(f"Updated {change.name}")
    
    # Create repo class and import files from repository
-   rp = Repo("example_repo", "git@github.com:user/example_repo.git", "main")
+   rp = Repo("example_repo", "git@github.com:RainingComputers/syncgit-test.git", "main")
    rp.set_config([
        SyncConfig("about_alice", "alice.json", "json"),
        SyncConfig("about_bob", "bob.yml"),

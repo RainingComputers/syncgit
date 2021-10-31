@@ -37,11 +37,15 @@ class SyncConfig:
 
         '''
         self.name = name
-        self.file_path = path
+        self.__file_path = path
         self.type = sync_type
 
         if sync_type == "auto":
             self.__get_auto_type()
+
+    @property
+    def file_path(self) -> str:
+        return self.__file_path
 
     def __get_auto_type(self) -> None:
         file_ext = os.path.splitext(self.file_path)[-1]
@@ -77,7 +81,7 @@ class Repo:
         self.__config: List[SyncConfig]
         self.__update_callback: Optional[Callable[[Any, List[SyncConfig]], None]] = None
         self.__thread_loop = ThreadLoop(
-            SYNCGIT_DEFAULT_POLL_INTERVAL, self.__update)
+            SYNCGIT_DEFAULT_POLL_INTERVAL, self.sync)
 
     @property
     def commit_hash(self) -> str:
@@ -126,7 +130,7 @@ class Repo:
 
     def start_sync(self) -> None:
         '''
-        Start sync to git repository
+        Start sync to git repository every :code:`os.environ["SYNCGIT_DEFAULT_POLL_INTERVAL"]`
         '''
         self.__thread_loop.start()
 
@@ -145,7 +149,10 @@ class Repo:
         self.__commit_hash = new_commit_hash
         return True
 
-    def __update(self) -> None:
+    def sync(self) -> None:
+        '''
+        Sync to repository only once
+        '''
         if not self.__pull():
             return
 
