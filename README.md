@@ -32,7 +32,7 @@ def update_callback(repo: Repo, changes: List[SyncConfig]) -> None:
         print(f"Updated {change.name}")
 
 # Create repo class and import files from repository
-rp = Repo("example_repo", "git@github.com:user/example_repo.git", "main")
+rp = Repo("example_repo", "git@github.com:RainingComputers/syncgit-test.git", "main")
 rp.set_config([
     SyncConfig("about_alice", "alice.json", "json"),
     SyncConfig("about_bob", "bob.yml"),
@@ -47,6 +47,7 @@ rp.set_update_callback(update_callback)
 rp.start_sync()
 
 # Imported files will be available as attributes on the repo class
+# Changes are reflected immediately on these attributes real time
 try:
     while True:
         time.sleep(1)

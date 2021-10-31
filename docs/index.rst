@@ -102,6 +102,7 @@ Example
    rp.start_sync()
    
    # Imported files will be available as attributes on the repo class
+   # Changes are reflected immediately on these attributes real time
    try:
        while True:
            time.sleep(1)
@@ -112,3 +113,25 @@ Example
    except KeyboardInterrupt:
        print("Stopping sync")
        rp.stop_sync()
+
+Environment Variables
+---------------------
+
+.. list-table::
+   :header-rows: 1
+
+   * - Name
+     - Description
+     - Default
+
+   * - SYNCGIT_CMD_TIMEOUT
+     - Timeout for pulling changes from repository
+     - 15
+
+   * - SYNCGIT_REPOS_DIR_NAME
+     - Directory to store all synced repositories
+     - .repos
+
+   * - SYNCGIT_DEFAULT_POLL_INTERVAL
+     - Default polling interval to pull changes and sync
+     - 5

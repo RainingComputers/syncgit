@@ -6,7 +6,7 @@ from contextlib import suppress
 from typing import List
 from typing import Optional
 
-from syncgit._config import SYNCGIT_CMD_TIMEOUT, SYNCGIT_REPO_DIR_NAME
+from syncgit._config import SYNCGIT_CMD_TIMEOUT, SYNCGIT_REPOS_DIR_NAME
 
 
 class RepoInfo:
@@ -16,7 +16,7 @@ class RepoInfo:
         self.branch = branch
 
         if dir_path is None:
-            self.dir = os.path.join(SYNCGIT_REPO_DIR_NAME, self.local_name)
+            self.dir = os.path.join(SYNCGIT_REPOS_DIR_NAME, self.local_name)
         else:
             self.dir = dir_path
 
@@ -71,4 +71,4 @@ def remove(repo_info: RepoInfo) -> None:
 
 
 def remove_all() -> None:
-    shutil.rmtree(f"./{SYNCGIT_REPO_DIR_NAME}")
+    shutil.rmtree(f"./{SYNCGIT_REPOS_DIR_NAME}")

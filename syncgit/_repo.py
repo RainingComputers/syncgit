@@ -32,7 +32,7 @@ class SyncConfig:
             sync_type : str
                 File type. Available options are :code:`"text"` (plain text file, will be converted
                 to python string), :code:`"json"`, :code:`"yaml"` (converted to python dict)
-                and :code:`"module"` (will be imported the file as python module). :code:`"auto"` to
+                and :code:`"module"` (will be imported as a python module). :code:`"auto"` to
                 automatically detect sync type from file extension
 
         '''
@@ -73,7 +73,7 @@ class Repo:
             Name of the branch to sync to
         dir_path : Optional[str]
             Directory path to download and sync the repo to, will be synced
-            to :code:`./.repos/<name>/` if :code:`None`
+            to :code:`f"./{os.environ["SYNCGIT_REPOS_DIR_NAME"]}/{name}/"` if :code:`None`
         '''
         self.__repo_info: RepoInfo = RepoInfo(name, url, branch, dir_path)
         self.__commit_hash = ""
@@ -97,7 +97,8 @@ class Repo:
         Parameters
         ----------
         seconds : int
-            Amount of time between synchronization (in seconds, default is 5 seconds)
+            Amount of time between synchronization (in seconds,
+            initially is :code:`os.environ["SYNCGIT_DEFAULT_POLL_INTERVAL"]`)
         '''
         self.__thread_loop.set_interval(seconds)
 
@@ -130,7 +131,7 @@ class Repo:
 
     def start_sync(self) -> None:
         '''
-        Start sync to git repository every :code:`os.environ["SYNCGIT_DEFAULT_POLL_INTERVAL"]`
+        Start sync to git repository every X seconds, see :func:`set_poll_interval`
         '''
         self.__thread_loop.start()
 
